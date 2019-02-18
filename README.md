@@ -1,6 +1,8 @@
 # AirWatch Diagnostics Tool
-The AirWatch Diagnostics Tool is your friend. It collects information about your AirWatch servers and presents it to you on a single screen.
-This can come in really handy in large environments with many servers. It can help you find and correlate issues across multiple servers simple by comparing them.
+The AirWatch Diagnostics Tool is your friend. It collects information about your AirWatch server and presents it to you on a single screen.
+This can come in really handy in large environments with many servers. It can help you find and correlate issues across multiple servers simply by comparing them.
+
+_Note: The script presents information about the server it's run on. It does not reach out to other servers to collect information about them._
 
 ## What can it do?
 So far, it can:
@@ -17,10 +19,10 @@ So far, it can:
 The script requires PowerShell 6 to run.
 
 ## Installation
-You simply need to download and copy, `aw-diag.ps1` to your server.
+You simply need to download and copy `aw-diag.ps1` to your server.
 
 ## Usage
-Once you have it copied to your server, you simply need to run the script, it does the rest.
+Once you have it copied to your server, you just need to run the script, it does the rest.
 
 ```
 # Open PowerShell 6 (pwsh)
