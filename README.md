@@ -33,7 +33,7 @@ PS > ./aw-diag.ps1
 
 ### Command Line Switches
 By default, the script will poll your Windows services and Microsoft Message queues every two seconds.
-- You can change poll frequency by using the `-PollFrequencySec` switch when calling the script.
+- You can change poll frequency by using the `-PollIntervalSec` switch when calling the script.
 - You can completely disable the automatic polling by using the `-DontPoll` switch. This will run the script once, then quit.
 
 ```
@@ -41,7 +41,7 @@ By default, the script will poll your Windows services and Microsoft Message que
 PS > ./aw-diag.ps1 -DontPoll
 
 # Change the Poll frequency to every 5 seconds
-PS > ./aw-diag -PollFrequencySec 5
+PS > ./aw-diag -PollIntervalSec 5
 ```
 
 ## Final Note
