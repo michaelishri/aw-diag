@@ -46,7 +46,7 @@ Function Test-PS6Version() {
 #
 # Parameters
 #  -Title: Specify the text to be shown, should be less than 80 characters long.
-#  -Colour: Optionally specify the color of the text. Pleae use the standard 
+#  -Colour: Optionally specify the color of the text. Pleae use the standard
 #            PowerShell Foreground colours. Default: White
 #  -Center: Optionally specify if the title text should be centred.
 #
@@ -60,7 +60,7 @@ Function Write-Title() {
         [Parameter(Mandatory=$false)][Switch]$Centre
     )
 
-    If($Centre) { 
+    If($Centre) {
         $LeftPadding = 40 + ([math]::Round($Title.Length / 2))
         $Title = $Title.PadLeft($LeftPadding)
     }
@@ -101,7 +101,7 @@ Function Get-MsmqQueue() {
     }
 
     # Convert the list to a new object that matches the original fields if you want to polyfill.
-    # https://docs.microsoft.com/en-us/powershell/module/msmq/get-msmqqueue?view=win10-ps 
+    # https://docs.microsoft.com/en-us/powershell/module/msmq/get-msmqqueue?view=win10-ps
 
     return $collQueues
 }
@@ -151,7 +151,7 @@ Function Read-WindowsHostFile() {
                 $hostEntry | Add-Member -MemberType NoteProperty -Name "hosts" -Value $hostLine[1]
                 $null = $hostEntries.Add($hostEntry)
             }
-        }     
+        }
     }
 
     Return $hostEntries
@@ -220,7 +220,7 @@ Function Read-AWCMConfig() {
 
                 $awcm | Add-Member -MemberType NoteProperty -Name $awcmKey -Value $awcmKvp[1]
             }
-        }        
+        }
     }
 
     Return $awcm
@@ -237,7 +237,7 @@ Function Read-AWCMConfig() {
 #--------------------------------------------------------------------------------
 Function Read-AWCMClusterConfig() {
     $clusterConfig = "$($AirWatch.Registry.AWVERSIONDIR)\AWCM\config\hazelcast.xml"
-    [xml]$awcmConfig = Get-Content $clusterConfig 
+    [xml]$awcmConfig = Get-Content $clusterConfig
 
     $awcm = New-Object System.Object
     $awcm | Add-Member -MemberType NoteProperty -Name "Members" -Value $awcmConfig.hazelcast.network.join.'tcp-ip'.member
@@ -264,11 +264,11 @@ Function Write-MessageQueueCountToScreen() {
         Write-Host "0"
     }
     elseif($queueCount -gt $AirWatch.LastQueueCount) {
-        Write-Host "$($queueCount) (up)" -ForegroundColor Magenta 
+        Write-Host "$($queueCount) (up)" -ForegroundColor Magenta
     } elseif($queueCount -lt $AirWatch.LastQueueCount) {
-        Write-Host "$($queueCount) (down)" -ForegroundColor Yellow 
+        Write-Host "$($queueCount) (down)" -ForegroundColor Yellow
     } else {
-        Write-Host "$($queueCount) (steady)" -ForegroundColor Cyan 
+        Write-Host "$($queueCount) (steady)" -ForegroundColor Cyan
     }
 
     $AirWatch.LastQueueCount = $queueCount
@@ -352,7 +352,7 @@ Function Write-AwcmDetailsToScreen() {
     Write-Host " - Disabled SSL Protocols: $($AirWatch.AWCM.AWCM_DISABLED_SSL_PROTOCOLS)"
     Write-Host " - Clustering Mode: $($AirWatch.AWCM.AWCM_CLUSTERING_MODE)"
     Write-Host " - Database Provider: $($AirWatch.AWCM.AWCM_DATABASE_PROVIDER)"
-    
+
     Write-Host " - Cluster Nodes:"
     $ClusterNodes = ($AirWatch.AWCMCluster.Members).Split(",").Trim()
     ForEach($ClusterNode In $ClusterNodes) {
@@ -395,9 +395,9 @@ Function Write-JavaHomeLocationToScreen() {
 Function Write-InstalledSoftwareToScreen() {
 
     Write-Host "`n Installed Software"
-    
+
     Write-Host " - Oracle Java"
-    $applications = $Airwatch.InstalledSoftware | Where-Object { $_.Publisher -like '*oracle*'} 
+    $applications = $Airwatch.InstalledSoftware | Where-Object { $_.Publisher -like '*oracle*'}
     ForEach($application In $applications) {
         Write-Host "   > $($application.DisplayName) v$($application.Version)"
     }
@@ -438,7 +438,7 @@ Function Test-OpenPort() {
     Param (
         [Parameter(Mandatory=$true,Position=1)][String]$IPAddress,
         [Parameter(Mandatory=$true,Position=2)][String]$Port
-    
+
     )
 
     Try {
@@ -447,7 +447,7 @@ Function Test-OpenPort() {
     } Catch {
         Return $false
     }
-   
+
 }
 
 #================================================================================
@@ -501,10 +501,10 @@ Function Start-BackgroundJobs() {
     $Connections = New-Object System.Collections.ArrayList
 
     ForEach($Vendor in $Vendors) {
-        
+
         $hostInfo = $Vendor.Split(':')
         $Connectivity = New-Object System.Object
-        $ping = @{ 
+        $ping = @{
             "job" = Start-Job -InitializationScript $passFunctions -ScriptBlock { Test-Ping $args[0] } -ArgumentList $hostInfo[0];
             "result" = $null
         }
@@ -512,10 +512,10 @@ Function Start-BackgroundJobs() {
         $Connectivity | Add-Member -MemberType NoteProperty -Name "host" -Value $hostInfo[0]
         $Connectivity | Add-Member -MemberType NoteProperty -Name "ping" -Value $ping
         $Ports = New-Object System.Collections.ArrayList
-        
+
         For($i=1; $i -lt $hostInfo.Count; $i++) {
-            $Port = @{ 
-                "port" = $hostInfo[$i]; 
+            $Port = @{
+                "port" = $hostInfo[$i];
                 "job" = Start-Job -InitializationScript $passFunctions -ScriptBlock { Test-OpenPort $args[0] $args[1] } -ArgumentList $hostInfo[0], $hostInfo[$i];
                 "result" = $null
             }
@@ -569,7 +569,7 @@ Function Update-BackgroundJobs() {
 Function Write-ConnectivityTestsToScreen() {
 
     Write-Host "`n Network Connectivity (no proxy)"
-     
+
     ForEach($RemoteHost In $AirWatch.ConnectivityTests) {
 
         Write-Host " - $($RemoteHost.host):" -NoNewline
@@ -619,15 +619,15 @@ $AirWatch | Add-Member -MemberType NoteProperty -Name "ConnectivityTests" -Value
 
 While($true) {
     Clear-Host
-    
+
     Write-Title -Title "$($Global:APP_TITLE)" -Centre
-    
+
     Write-AwGeneralDetailsToScreen
     Write-AwcmDetailsToScreen
     Write-WindowsHostFileToScreen
     Write-InstalledSoftwareToScreen
     Write-ConnectivityTestsToScreen
-    
+
     Write-Host "`n Automatic Polling (every $($PollIntervalSec) seconds)"
     Write-DownServicesToScreen
     Write-MessageQueueCountToScreen
